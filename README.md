@@ -1,2 +1,2 @@
-# TicTacToe
-In-browser Tic Tac Toe (A small project for CS396: Intermediate Software Project)
+# Resources
+All image resources are royalty free and come from https://openclipart.org/

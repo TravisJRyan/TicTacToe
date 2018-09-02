@@ -1,0 +1,178 @@
+<html>
+
+<head>
+    <title>Tic Tac Toe</title>
+    <!-- Local Javacript file (my own code) -->
+    <script src="app.js"></script>
+    <!-- External Dependencies: Semantic UI Javascript and CSS for UI, JQuery for DOM manipulation -->
+    <link rel="stylesheet" type="text/css" href="./semantic/semantic.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous">
+    </script>
+    <script src="./semantic/semantic.js"></script>
+</head>
+
+<body style="background-color: #F6F4F3">
+    <!--Navbar-->
+    <div class="ui menu">
+        <div class="header item">
+            Tic Tac Toe
+        </div>
+        <a class="item active">
+            <i class="play icon"></i>
+            Play
+        </a>
+        <a class="item">
+            <i class="wrench icon"></i>
+            Settings
+        </a>
+        <a class="item">
+            <i class="calculator icon"></i>
+            Statistics
+        </a>
+        <a class="item">
+            <i class="clipboard outline icon"></i>
+            About
+        </a>
+    </div>
+
+    <!--Game board-->
+    <div id="gameBoard">
+        <!-- Header Text -->
+        <div style="text-align: center">
+            <div id="headerMessage">
+                <h1>Tic Tac Toe!</h1>
+            </div>
+        </div>
+        <div class="ui grid">
+            <div class="ui seven column grid container">
+                <div class="row">
+                    <div class="column"></div>
+                    <div class="column"></div>
+                    <div class=" column">
+                        <div class="ui segment" onclick="processPlayerMove(0)">
+                            <img id="image0" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <br>
+                    <div class=" column">
+                        <div class="ui segment" onclick="processPlayerMove(1)">
+                            <img id="image1" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class=" column">
+                        <div class="ui segment" onclick="processPlayerMove(2)">
+                            <img id="image2" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                    <div class="column"></div>
+                </div>
+                <div class="row">
+                    <div class="column"></div>
+                    <div class="column"></div>
+                    <div class="column">
+                        <div class="ui segment" onclick="processPlayerMove(3)">
+                            <img id="image3" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ui segment" onclick="processPlayerMove(4)">
+                            <img id="image4" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ui segment" onclick="processPlayerMove(5)">
+                            <img id="image5" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                    <div class="column"></div>
+                </div>
+                <div class="row">
+                    <div class="column"></div>
+                    <div class="column"></div>
+                    <div class="column center aligned">
+                        <div class="ui segment" onclick="processPlayerMove(6)">
+                            <img id="image6" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column center aligned">
+                        <div class="ui segment" onclick="processPlayerMove(7)">
+                            <img id="image7" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column center aligned">
+                        <div class="ui segment" onclick="processPlayerMove(8)">
+                            <img id="image8" src="./img/white.png" class="ui fluid image">
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                    <div class="column"></div>
+                </div>
+                <br>
+            </div>
+
+            <!-- Menu -->
+            <div class="ui container center aligned">
+                <div class="ui toggle checkbox">
+                    <input id="turnCheckbox" type="checkbox" name="example">
+                    <label style="color: rgb(196, 176, 112); font-size:20px">Computer Moves First</label>
+                </div>
+                <br>
+                <br>
+                <button class="ui primary button" id="startOverButton" onclick="startGame()">
+                    <i class="icon refresh"></i>
+                    Start Over
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings">
+        This is settings!
+    </div>
+
+    <div id="statistics">
+        This is statistics!
+    </div>
+
+    <!-- About Tab -->
+    <div id="about">
+        <!-- Header Text -->
+        <div style="text-align: center">
+            <div id="aboutHeaderMessage">
+                <h1>About</h1>
+            </div>
+        </div>
+        <div class="ui grid">
+            <div class="ui three column grid container">
+                <div class="column"></div>
+                <div class="column" style="text-align: center">
+                    <div class="ui text segment">
+                        <p>
+                            <a href="https://github.com/TravisJRyan/">
+                                <i class="github square icon"></i> View this project on GitHub <i class="github square icon"></i>
+                        </p>
+                        </a>
+                    </div>
+                </div>
+                <div class="column"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start the game on page load
+        $(document).ready(pageLoaded());
+        // Event listener for space bar (Allows user to restart game with space bar)
+        $(window).keypress(function (e) {
+            if (e.which === 32) {
+                startGame();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
