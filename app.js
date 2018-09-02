@@ -42,9 +42,9 @@ var winConditions = [
 // Inititalized empty
 var gameState = ["empty", "empty", "empty", "empty", "empty", "empty", "empty", "empty", "empty"];
 
-function pageLoaded(){ // Hide inactive tabs and start a game of Tic Tac Toe
-    $("#gameBoard").hide();
-    //$("#about").hide();
+function pageLoaded() { // Hide inactive tabs and start a game of Tic Tac Toe
+    //$("#gameBoard").hide();
+    $("#about").hide();
     $("#settings").hide();
     $("#statistics").hide();
     startGame();
@@ -59,7 +59,7 @@ function startGame() {
     }
     computerTurnNumber = 1;
     updateEntireScreen();
-    if(document.getElementById('turnCheckbox').checked) {
+    if (document.getElementById('turnCheckbox').checked) {
         computerWentFirstThisGame = true;
         processComputerMove();
     } else {
@@ -99,8 +99,8 @@ function processComputerMove() {
 // Updates every tile on the screen based on the game state
 function updateEntireScreen() {
     for (var i = 0; i < 9; i++) {
-        if(imageMap[gameState[i]] != $('#image'+i).attr('src') );
-            $("#image"+i).attr("src", imageMap[gameState[i]]);
+        if (imageMap[gameState[i]] != $('#image' + i).attr('src'));
+        $("#image" + i).attr("src", imageMap[gameState[i]]);
     }
 }
 
@@ -147,10 +147,10 @@ function gameTied() {
 // Strategy logic determined by this source: http://www.chessandpoker.com/tic_tac_toe_strategy.html
 function findMove() {
     var winningMove = getWinningOrBlockingMove("O"); // Win game if possible
-    if(winningMove != -1)
-      return winningMove;
+    if (winningMove != -1)
+        return winningMove;
     var blockingMove = getWinningOrBlockingMove("X"); // If win isn't possible, block opponent win if necessary
-    if(blockingMove != -1)
+    if (blockingMove != -1)
         return blockingMove;
     // Other possible game logic for first several turns 
     // Strategy defined through switch/case conditions based on link above
@@ -160,7 +160,7 @@ function findMove() {
                 case true:
                     return 0; // If given first move, always pick upper-left corner
                 case false:
-                    if(gameState[4]=="empty") //take center square if available
+                    if (gameState[4] == "empty") //take center square if available
                         return 4;
                     else
                         return 0; //else take upper-left corner
@@ -168,30 +168,29 @@ function findMove() {
         case 2:
             switch (computerWentFirstThisGame) {
                 case true:
-                    if(gameState[4]=="X") // User chose center square
+                    if (gameState[4] == "X") // User chose center square
                         return 8; // Take bottom-right square
-                    else if(gameState[2]=="X" || gameState[6]=="X") // User chose a corner that isn't bottom-right
+                    else if (gameState[2] == "X" || gameState[6] == "X") // User chose a corner that isn't bottom-right
                         return 8; // Take bottom-right square
-                    else if(gameState[8]=="X") // User chose bottom-right corner
+                    else if (gameState[8] == "X") // User chose bottom-right corner
                         return 6; // Take bottom-left square
-                    else if (gameState[1]=="X" || gameState[3]=="X" || gameState[5]=="X" || gameState[7]=="X") // User picks edge square
+                    else if (gameState[1] == "X" || gameState[3] == "X" || gameState[5] == "X" || gameState[7] == "X") // User picks edge square
                         return 4; // Take center square
                 case false:
-                    if(gameState[4]=="X"){ // if user got center square and still isn't threatening a win, take an available corner
-                        if(gameState[2]=="empty")
+                    if (gameState[4] == "X") { // if user got center square and still isn't threatening a win, take an available corner
+                        if (gameState[2] == "empty")
                             return 2;
-                        else if(gameState[6]=="empty")
+                        else if (gameState[6] == "empty")
                             return 6;
-                        else if(gameState[8]=="empty")
+                        else if (gameState[8] == "empty")
                             return 8;
-                    }
-                    else if( (gameState[0]=="X" && gameState[8]=="X") || (gameState[2]=="X" && gameState[6]=="X") ){ //caddy-corner X's
+                    } else if ((gameState[0] == "X" && gameState[8] == "X") || (gameState[2] == "X" && gameState[6] == "X")) { //caddy-corner X's
                         return 1; // threaten a win (because we have the center square). (Player must block and tie game.)
                     }
             }
         default: // Default case: Game can't be lost/won at this point, so just pick the first available tile.
-            for(var i = 0; i < gameState.length; i++){
-                if(gameState[i]=="empty")
+            for (var i = 0; i < gameState.length; i++) {
+                if (gameState[i] == "empty")
                     return i;
             }
     }
@@ -199,20 +198,19 @@ function findMove() {
 
 // Determines if the game can either be won by the computer or needs to be blocked by the player
 // Input to this function should be X or O
-function getWinningOrBlockingMove(computerOrPlayer){
-    for(var winCondition in winConditions){ // Check all win conditions
+function getWinningOrBlockingMove(computerOrPlayer) {
+    for (var winCondition in winConditions) { // Check all win conditions
         var computerTileCount = 0;
         var emptyTileCount = 0;
         var possibleWin = winConditions[winCondition];
         var emptyTile = -1;
-        for(var i = 0; i < possibleWin.length; i++){ // For each possible win, see if there are 2 filled tiles and 1 empty tile
-            if(gameState[possibleWin[i]] == "empty"){
+        for (var i = 0; i < possibleWin.length; i++) { // For each possible win, see if there are 2 filled tiles and 1 empty tile
+            if (gameState[possibleWin[i]] == "empty") {
                 emptyTileCount++;
                 emptyTile = possibleWin[i]; // Keep track of the empty tile
-            }
-            else if(gameState[possibleWin[i]] == computerOrPlayer)
+            } else if (gameState[possibleWin[i]] == computerOrPlayer)
                 computerTileCount++;
-            if (emptyTileCount == 1 && computerTileCount == 2){ // If possible to win, return the empty tile
+            if (emptyTileCount == 1 && computerTileCount == 2) { // If possible to win, return the empty tile
                 return emptyTile;
             }
         }
@@ -221,3 +219,33 @@ function getWinningOrBlockingMove(computerOrPlayer){
 }
 
 /* Tab Navigation Functions */
+function switchTabs(newTabNumber) {
+    if (newTabNumber == 0) {
+        hideAllTabs();
+        $("#gameBoard").show();
+        $("#gameTab").addClass("active");
+    } else if (newTabNumber == 1) {
+        hideAllTabs();
+        $("#settings").show();
+        $("#settingsTab").addClass("active");
+    } else if (newTabNumber == 2) {
+        hideAllTabs();
+        $("#statistics").show();
+        $("#statisticsTab").addClass("active");
+    } else if (newTabNumber == 3) {
+        hideAllTabs();
+        $("#about").show();
+        $("#aboutTab").addClass("active");
+    }
+}
+
+function hideAllTabs(){
+    $("#gameBoard").hide();
+    $("#gameTab").removeClass("active");
+    $("#settings").hide();
+    $("#settingsTab").removeClass("active");
+    $("#statistics").hide();
+    $("#statisticsTab").removeClass("active");
+    $("#about").hide();
+    $("#aboutTab").removeClass("active");
+}

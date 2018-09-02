@@ -13,24 +13,25 @@
 </head>
 
 <body style="background-color: #F6F4F3">
-    <!--Navbar-->
+
+    <!--Navbar allows users to navigate between various "tabs"-->
     <div class="ui menu">
         <div class="header item">
             Tic Tac Toe
         </div>
-        <a class="item active">
+        <a class="item active" id="gameTab" onclick="switchTabs(0)">
             <i class="play icon"></i>
             Play
         </a>
-        <a class="item">
+        <a class="item" id="settingsTab" onclick="switchTabs(1)">
             <i class="wrench icon"></i>
             Settings
         </a>
-        <a class="item">
+        <a class="item" id="statisticsTab" onclick="switchTabs(2)">
             <i class="calculator icon"></i>
             Statistics
         </a>
-        <a class="item">
+        <a class="item" id="aboutTab" onclick="switchTabs(3)">
             <i class="clipboard outline icon"></i>
             About
         </a>
@@ -133,16 +134,44 @@
         This is settings!
     </div>
 
+    <!-- Statistics Tab -->
     <div id="statistics">
-        This is statistics!
-    </div>
+            <!-- Header Text -->
+            <div style="text-align: center">
+                <div id="statisticsHeaderMessage">
+                    <h1><i class="calculator icon"></i>Statistics</h1>
+                </div>
+            </div>
+            <div class="ui grid">
+                <div class="ui three column grid container">
+                    <div class="column"></div>
+                    <div class="column" style="text-align: left">
+                        <div class="ui text segment">
+                            <p style="text-align: left">
+                                <h4 style="text-align: center">Here are some statistics about your recent games:</h3> <br>
+                                <b>Games Played: </b> Message <br><br>
+                                <b>Computer Won: </b> Message <br><br>
+                                <b>Player Won: </b> Message <br><br>
+                                <b>Tied: </b> Message <br><br>
+                                <b>Most Common Opener: </b> Message <br><br>
+                            </p>
+                            <p style="text-align: center">
+                                <i>Note: Refreshing this page will reset your statistics.</i>
+                            </p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                </div>
+            </div>
+        </div>
 
     <!-- About Tab -->
     <div id="about">
         <!-- Header Text -->
         <div style="text-align: center">
             <div id="aboutHeaderMessage">
-                <h1>About</h1>
+                <h1><i class="clipboard outline icon"></i>About</h1>
             </div>
         </div>
         <div class="ui grid">
@@ -150,8 +179,16 @@
                 <div class="column"></div>
                 <div class="column" style="text-align: center">
                     <div class="ui text segment">
+                        <p style="text-align: left">
+                            This project was built for WKU's CS396: Intermediate Software Project. All implementation was done by 
+                            myself, Travis Ryan.<br><br>
+                            <b>External dependencies:</b> <a href="https://jquery.com/">JQuery</a> and <a href="https://semantic-ui.com/introduction/getting-started.html">Semantic UI</a>.
+                            <br><br>
+                            <b>Resources:</b> All resources are royalty-free and come from <a href="https://openclipart.org/">Open Clip Art</a>.
+                            <br><br>
+                        </p>
                         <p>
-                            <a href="https://github.com/TravisJRyan/">
+                            <a href="https://github.com/TravisJRyan/TicTacToe">
                                 <i class="github square icon"></i> View this project on GitHub <i class="github square icon"></i>
                         </p>
                         </a>
@@ -163,7 +200,7 @@
     </div>
 
     <script>
-        // Start the game on page load
+        // Start the game and hide inactive tabs on page load
         $(document).ready(pageLoaded());
         // Event listener for space bar (Allows user to restart game with space bar)
         $(window).keypress(function (e) {
