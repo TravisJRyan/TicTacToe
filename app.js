@@ -17,6 +17,17 @@ var imageMap = {
     "empty": "img/white.png"
 }
 
+// Global statistics vars (every win/loss/tie on every difficulty)
+var easyPlayerWon = 0;
+var easyComputerWon = 0;
+var easyTied = 0;
+var mediumPlayerWon = 0;
+var mediumComputerWon = 0;
+var mediumTied = 0;
+var hardPlayerWon = 0;
+var hardComputerWon = 0;
+var hardTied = 0;
+
 // Global boolean that keeps track of whether the game is over and actions should be locked
 var gameOver = false;
 
@@ -25,6 +36,9 @@ var computerTurnNumber = 1;
 
 // Global boolean that keeps track of whether the computer went first this game (default false)
 var computerWentFirstThisGame = false;
+
+// Global string keeping track of current game difficulty
+var gameDifficulty = "hard";
 
 // Global array of coordinates that result in a win for player or computer
 var winConditions = [
@@ -116,6 +130,7 @@ function checkForWin(side) {
     return false;
 }
 
+// Checks for a tie by returning true if all tiles are taken
 function checkForTie() {
     for (var i = 0; i < gameState.length; i++) {
         if (gameState[i] == "empty")
@@ -128,18 +143,39 @@ function checkForTie() {
 function playerWins() {
     $("#headerMessage").html("<h1>Player wins!</h1>");
     gameOver = true;
+    if(gameDifficulty=="hard"){
+        hardPlayerWon++;
+    } else if(gameDifficulty=="medium"){
+        mediumPlayerWon++;
+    } else if(gameDifficulty=="easy"){
+        easyPlayerWon++;
+    }
 }
 
 // Alert when the computer wins
 function computerWins() {
     $("#headerMessage").html("<h1>Computer wins!</h1>");
     gameOver = true;
+    if(gameDifficulty=="hard"){
+        hardComputerWon++;
+    } else if(gameDifficulty=="medium"){
+        mediumComputerWon++;
+    } else if(gameDifficulty=="easy"){
+        easyComputerWon++;
+    }
 }
 
 // Alert when the game ends in a tie
 function gameTied() {
     $("#headerMessage").html("<h1>Game tied</h1>");
     gameOver = true;
+    if(gameDifficulty=="hard"){
+        hardTied++;
+    } else if(gameDifficulty=="medium"){
+        mediumTied++;
+    } else if(gameDifficulty=="easy"){
+        easyTied++;
+    }
 }
 
 // Finds the optimal move for the computer using the given board state
@@ -219,26 +255,30 @@ function getWinningOrBlockingMove(computerOrPlayer) {
 }
 
 /* Tab Navigation Functions */
+
+// Function takes in which tab to switch to, hides all tabs, and then activates the tab's highlight and shows its contents
 function switchTabs(newTabNumber) {
-    if (newTabNumber == 0) {
+    if (newTabNumber == 0) { // Game window
         hideAllTabs();
         $("#gameBoard").show();
         $("#gameTab").addClass("active");
-    } else if (newTabNumber == 1) {
+    } else if (newTabNumber == 1) { // Settings
         hideAllTabs();
         $("#settings").show();
         $("#settingsTab").addClass("active");
-    } else if (newTabNumber == 2) {
+    } else if (newTabNumber == 2) { // Statistics
         hideAllTabs();
         $("#statistics").show();
         $("#statisticsTab").addClass("active");
-    } else if (newTabNumber == 3) {
+        updateStatisticsTab();
+    } else if (newTabNumber == 3) { // About
         hideAllTabs();
         $("#about").show();
         $("#aboutTab").addClass("active");
     }
 }
 
+// A simple helper function that uses JQuery to hide all tab content and de-activate their tab highlighting
 function hideAllTabs(){
     $("#gameBoard").hide();
     $("#gameTab").removeClass("active");
@@ -248,4 +288,28 @@ function hideAllTabs(){
     $("#statisticsTab").removeClass("active");
     $("#about").hide();
     $("#aboutTab").removeClass("active");
+}
+
+// Updates the statistics tab to reflect all game records
+function updateStatisticsTab(){
+    // Update easy mode statistics
+    var easyTotal = easyPlayerWon+easyComputerWon+easyTied;
+    $("#easyGamesPlayed").html("Games Played: "+easyTotal);
+    $("#easyPlayerWon").html("Player Won: "+easyPlayerWon);
+    $("#easyComputerWon").html("Computer Won: "+easyComputerWon);
+    $("#easyTied").html("Tied: "+easyTied);
+
+    // Update medium mode statistics
+    var mediumTotal = mediumPlayerWon+mediumComputerWon+mediumTied;
+    $("#mediumGamesPlayed").html("Games Played: "+mediumTotal);
+    $("#mediumPlayerWon").html("Player Won: "+mediumPlayerWon);
+    $("#mediumComputerWon").html("Computer Won: "+mediumComputerWon);
+    $("#mediumTied").html("Tied: "+mediumTied);
+
+    // Update hard mode statistics
+    var hardTotal = hardPlayerWon+hardComputerWon+hardTied;
+    $("#hardGamesPlayed").html("Games Played: "+hardTotal);
+    $("#hardPlayerWon").html("Player Won: "+hardPlayerWon);
+    $("#hardComputerWon").html("Computer Won: "+hardComputerWon);
+    $("#hardTied").html("Tied: "+hardTied);
 }
