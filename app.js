@@ -54,7 +54,9 @@ var winConditions = [
 
 // Global array to keep track of the game state for every tile (First row 0-2, Second row 3-5, Third row 6-8)
 // Inititalized empty
-var gameState = ["empty", "empty", "empty", "empty", "empty", "empty", "empty", "empty", "empty"];
+var gameState = ["empty", "empty", "empty", 
+                "empty", "empty", "empty", 
+                "empty", "empty", "empty"];
 
 function pageLoaded() { // Hide inactive tabs and start a game of Tic Tac Toe
     //$("#gameBoard").hide();
@@ -139,7 +141,7 @@ function checkForTie() {
     return true;
 }
 
-// Alert when a player wins. In theory, this never gets called because the game is unwinnable.
+// Alert when a player wins. (The game is unwinnable on Hard difficulty, so this only happens on Easy/Medium.)
 function playerWins() {
     $("#headerMessage").html("<h1>Player wins!</h1>");
     gameOver = true;
@@ -270,7 +272,7 @@ function switchTabs(newTabNumber) {
         hideAllTabs();
         $("#statistics").show();
         $("#statisticsTab").addClass("active");
-        updateStatisticsTab();
+        updateStatisticsTab(); // When navigating to Statistics tabs, update all values
     } else if (newTabNumber == 3) { // About
         hideAllTabs();
         $("#about").show();
