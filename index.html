@@ -147,15 +147,27 @@
                         <b>Difficulty: &nbsp;&nbsp;</b>
                         <br>
                         <div class="ui selection dropdown" id="difficultyDropdown">
-                            <div class="text"></div>
+                            <input type="hidden" name="difficulty">
                             <i class="dropdown icon"></i>
+                            <div class="text">Hard</div>
+                            <div class="menu">
+                                <div class="item" data-value="easy">Easy</div>
+                                <div class="item" data-value="medium">Medium</div>
+                                <div class="active item" data-value="hard">Hard</div>
+                            </div>
                         </div>
                         <br><br>
                         <b>Theme: &nbsp;&nbsp;</b>
                         <br>
                         <div class="ui selection dropdown" id="themeDropdown">
-                            <div class="text"></div>
+                            <input type="hidden" name="theme">
                             <i class="dropdown icon"></i>
+                            <div class="text">Classic</div>
+                            <div class="menu">
+                                <div class="active item" data-value="classic">Classic</div>
+                                <div class="item" data-value="cowboysAndAliens">Cowboys And Aliens</div>
+                                <div class="item" data-value="piratesAndNinjas">Pirates and Ninjas</div>
+                            </div>
                         </div>
                         <br><br>
                         <p style="text-align: center">
@@ -257,42 +269,9 @@
                 startGame();
             }
         });
-        // Event properties for dropdown boxes in settings tab
-        $('#difficultyDropdown')
-            .dropdown({
-                values: [{
-                        name: 'Easy',
-                        value: 'easy'
-                    },
-                    {
-                        name: 'Medium',
-                        value: 'medium'
-                    },
-                    {
-                        name: 'Hard',
-                        value: 'hard',
-                        selected: true
-                    }
-                ]
-            });
-        $('#themeDropdown')
-            .dropdown({
-                values: [{
-                        name: 'Classic',
-                        value: 'classic',
-                        selected: true
-                    },
-                    {
-                        name: 'Pirates and Ninjas',
-                        value: 'piratesAndNinjas'
-                    },
-                    {
-                        name: 'Cowboys and Aliens',
-                        value: 'cowboysAndAliens'
-                    }
-                ]
-            });
-        console.log($("#themeDropdown"));
+        // Initialize dropdown boxes in settings tab
+        $('.ui.dropdown')
+            .dropdown();
     </script>
 
 </body>

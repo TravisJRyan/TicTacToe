@@ -2,11 +2,6 @@
     TIC TAC TOE
     Travis Ryan
     August 30, 2018
-
-    Board represented by an array with the following corresponding values:
-    [0, 1, 2
-     3, 4, 5
-     6, 7, 8]
 */
 
 // Global map of game states (X, O, empty) to the file locations of the corresponding image
@@ -52,6 +47,9 @@ var computerWentFirstThisGame = false;
 // Global string keeping track of current game difficulty
 var gameDifficulty = "hard";
 
+// Global string to keep track of the current UI theme
+var gameTheme = "classic";
+
 // Global array of coordinates that result in a win for player or computer
 var winConditions = [
     [0, 1, 2], // horizontal row 1
@@ -82,6 +80,7 @@ function pageLoaded() { // Hide inactive tabs and start a game of Tic Tac Toe
 function startGame() {
     gameOver = false;
     setDifficulty();
+    setTheme();
     $("#headerMessage").html("<h1>Tic Tac Toe</h1>");
     for (tile in gameState) {
         gameState[tile] = "empty";
@@ -98,7 +97,7 @@ function startGame() {
 
 // Processes the player's tile selection by placing an X and updating board state
 function processPlayerMove(chosenTile) {
-    if (gameState[chosenTile] == "empty" && !gameOver) {
+    if (gameState[chosenTile] == "empty" && !gameOver) { // Only allow tile placement on non-empty tiles while game isn't over
         gameState[chosenTile] = "X";
         updateEntireScreen();
         if (checkForWin("X"))
@@ -133,8 +132,9 @@ function processComputerMove() {
 // Updates every tile on the screen based on the game state
 function updateEntireScreen() {
     for (var i = 0; i < 9; i++) {
-        if (imageMap[gameState[i]] != $('#image' + i).attr('src'));
-        $("#image" + i).attr("src", imageMap["cowboysAndAliens"][gameState[i]]);
+        if (gameState[i] != "empty" && $('#image' + i).attr('src')=="img/white.png")
+            console.log("gotta update "+i);
+        $("#image" + i).attr("src", imageMap[gameTheme][gameState[i]]);
     }
 }
 
@@ -242,9 +242,17 @@ function findHardMove() {
                             return 8;
                     } else if ((gameState[0] == "X" && gameState[8] == "X") || (gameState[2] == "X" && gameState[6] == "X")) { //caddy-corner X's
                         return 1; // threaten a win (because we have the center square). (Player must block and tie game.)
+                    } else if(gameState[1] == "X" && gameState[3] == "X"){ // if user has 2 adjacent edges upper left, go in between them
+                        return 0;
+                    } else if(gameState[1] == "X" && gameState[5]=="X"){ // if user has 2 adjacent edges upper right, go in between them
+                        return 2;
+                    } else if(gameState[3] == "X" && gameState[7]=="X"){ // if user has 2 adjacent edges bottom left, go in between them
+                        return 6;
+                    } else if(gameState[5]=="X" && gameState[7]=="X"){ // if user has 2 adjacent edges bottom right, go in between them
+                        return 8;
                     }
             }
-        default: // Default case: Game can't be lost at this point, so just pick the first available tile.
+        default: // Default case: Game can't be lost/won at this point, so just pick the first available tile and draw.
             for (var i = 0; i < gameState.length; i++) {
                 if (gameState[i] == "empty")
                     return i;
@@ -298,9 +306,28 @@ function getWinningOrBlockingMove(computerOrPlayer) {
     return -1; // Return -1 if no win/block found
 }
 
+// Called at the start of every game
+// Grabs the difficulty from the settings dropdown (Default: Hard) and sets game difficulty before beginning
 function setDifficulty(){
-    console.log($("difficultyDropdown").val());
-    gameDifficulty = "hard";
+    var setDifficulty = $('#difficultyDropdown').dropdown('get value').trim();
+    if(setDifficulty == "easy")
+        gameDifficulty = "easy";
+    else if(setDifficulty == "medium")
+        gameDifficulty = "medium";
+    else
+        gameDifficulty = "hard";
+}
+
+// Called at the start of every game
+// Grabs the theme from the settings dropdown (Default: Classic) and sets theme before beginning
+function setTheme(){
+    var setTheme = $('#themeDropdown').dropdown('get value').trim();
+    if(setTheme == "piratesAndNinjas")
+        gameTheme = "piratesAndNinjas";
+    else if(setTheme == "cowboysAndAliens")
+        gameTheme = "cowboysAndAliens";
+    else
+        gameTheme = "classic";
 }
 
 /* Tab Navigation Functions */
@@ -311,6 +338,7 @@ function switchTabs(newTabNumber) {
         hideAllTabs();
         $("#gameBoard").show();
         $("#gameTab").addClass("active");
+        startGame(); // Always start a new game if switching back to game tab
     } else if (newTabNumber == 1) { // Settings
         hideAllTabs();
         $("#settings").show();
