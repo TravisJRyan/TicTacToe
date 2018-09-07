@@ -50,6 +50,9 @@ var gameDifficulty = "hard";
 // Global string to keep track of the current UI theme
 var gameTheme = "classic";
 
+// Global boolean to keep track of whether or not the computer is taking its turn
+var computerThinking = false;
+
 // Global array of coordinates that result in a win for player or computer
 var winConditions = [
     [0, 1, 2], // horizontal row 1
@@ -96,7 +99,8 @@ function startGame() {
 
 // Processes the player's tile selection by placing an X and updating board state
 function processPlayerMove(chosenTile) {
-    if (gameState[chosenTile] == "empty" && !gameOver) { // Only allow tile placement on non-empty tiles while game isn't over
+    // Only allow tile placement on non-empty tiles while game isn't over and computer's turn not active
+    if (gameState[chosenTile] == "empty" && !gameOver && !computerThinking) {
         gameState[chosenTile] = "X";
         updateEntireScreen();
         if (checkForWin("X"))
@@ -109,30 +113,34 @@ function processPlayerMove(chosenTile) {
 }
 
 // Processes the next move for the computer, places a O, and updates board state
-function processComputerMove() {
-    if (!gameOver) {
+// Function is async so we can allow a sleep for the computer to think
+async function processComputerMove() {
+    computerThinking = true; // Disable user from making move while computer is "thinking"
+    await sleep(400); // A small sleep time (.4 seconds) to simulate the computer "thinking"
+    if (!gameOver) { // Ensure game isnt over
+        // Choose game move based on difficulty chosen
         if(gameDifficulty=="hard")
             var optimalTile = findHardMove();
         else if(gameDifficulty=="medium")
             var optimalTile = findMediumMove();
         else if(gameDifficulty=="easy")
             var optimalTile = findEasyMove();
+        // Take the optimal tile returned and set gameState to make move
         gameState[optimalTile] = "O";
-        updateEntireScreen();
-        if (checkForWin("O"))
+        updateEntireScreen(); // Update screen to reflect computer's turn
+        if (checkForWin("O")) // Check for a computer win
             computerWins();
-        else if (checkForTie()) {
+        else if (checkForTie()) { // Else check for a tie
             gameTied();
         }
-        computerTurnNumber++;
+        computerTurnNumber++; // Update how many turns have passed (for move making algorithm)
     }
+    computerThinking = false; // End the function by allowing user to make a move
 }
 
 // Updates every tile on the screen based on the game state
 function updateEntireScreen() {
     for (var i = 0; i < 9; i++) {
-        if (gameState[i] != "empty" && $('#image' + i).attr('src')=="img/white.png")
-            console.log("gotta update "+i);
         $("#image" + i).attr("src", imageMap[gameTheme][gameState[i]]);
     }
 }
@@ -162,6 +170,7 @@ function checkForTie() {
 function playerWins() {
     $("#headerMessage").html("<h1>Player wins!</h1>");
     gameOver = true;
+    // Update statistics based on results
     if(gameDifficulty=="hard"){
         hardPlayerWon++;
     } else if(gameDifficulty=="medium"){
@@ -175,6 +184,7 @@ function playerWins() {
 function computerWins() {
     $("#headerMessage").html("<h1>Computer wins!</h1>");
     gameOver = true;
+    // Update statistics based on results
     if(gameDifficulty=="hard"){
         hardComputerWon++;
     } else if(gameDifficulty=="medium"){
@@ -188,6 +198,7 @@ function computerWins() {
 function gameTied() {
     $("#headerMessage").html("<h1>Game tied</h1>");
     gameOver = true;
+    // Update statistics based on results
     if(gameDifficulty=="hard"){
         hardTied++;
     } else if(gameDifficulty=="medium"){
@@ -233,11 +244,11 @@ function findHardMove() {
                         return 4; // Take center square
                 case false:
                     if (gameState[4] == "X") { // if user got center square and still isn't threatening a win, take an available corner
-                        if (gameState[2] == "empty")
+                        if (gameState[2] == "empty") // check upper right corner
                             return 2;
-                        else if (gameState[6] == "empty")
+                        else if (gameState[6] == "empty") // check bottom left corner
                             return 6;
-                        else if (gameState[8] == "empty")
+                        else if (gameState[8] == "empty") // check bottom right corner
                             return 8;
                     } else if ((gameState[0] == "X" && gameState[8] == "X") || (gameState[2] == "X" && gameState[6] == "X")) { //caddy-corner X's
                         return 1; // threaten a win (because we have the center square). (Player must block and tie game.)
@@ -268,6 +279,7 @@ function findMediumMove(){
     var blockingMove = getWinningOrBlockingMove("X"); // If win isn't possible, block opponent win if necessary
     if (blockingMove != -1)
         return blockingMove;
+    // Otherwise just return the first available tile (No "smart" logic for first several turns like hard difficulty)
     for (var i = 0; i < gameState.length; i++) {
         if (gameState[i] == "empty")
             return i;
@@ -275,7 +287,7 @@ function findMediumMove(){
 }
 
 // Finds a move for the computer on easy difficulty
-// Always just takes the first tile available
+// Always just takes the first tile available (This is why difficulty is easy.)
 function findEasyMove(){
     for (var i = 0; i < gameState.length; i++) {
         if (gameState[i] == "empty")
@@ -389,3 +401,8 @@ function updateStatisticsTab(){
     $("#hardComputerWon").html("Computer Won: "+hardComputerWon);
     $("#hardTied").html("Tied: "+hardTied);
 }
+
+// Sleep function to simulate the computer thinking
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
