@@ -143,6 +143,21 @@
                 <div class="column"></div>
                 <div class="column" style="text-align: left">
                     <div class="ui text segment">
+                        <br>
+                        <b>Difficulty: &nbsp;&nbsp;</b>
+                        <br>
+                        <div class="ui selection dropdown" id="difficultyDropdown">
+                            <div class="text"></div>
+                            <i class="dropdown icon"></i>
+                        </div>
+                        <br><br>
+                        <b>Theme: &nbsp;&nbsp;</b>
+                        <br>
+                        <div class="ui selection dropdown" id="themeDropdown">
+                            <div class="text"></div>
+                            <i class="dropdown icon"></i>
+                        </div>
+                        <br><br>
                         <p style="text-align: center">
                             <i>Note: Refreshing this page will reset your settings.</i>
                         </p>
@@ -242,6 +257,42 @@
                 startGame();
             }
         });
+        // Event properties for dropdown boxes in settings tab
+        $('#difficultyDropdown')
+            .dropdown({
+                values: [{
+                        name: 'Easy',
+                        value: 'easy'
+                    },
+                    {
+                        name: 'Medium',
+                        value: 'medium'
+                    },
+                    {
+                        name: 'Hard',
+                        value: 'hard',
+                        selected: true
+                    }
+                ]
+            });
+        $('#themeDropdown')
+            .dropdown({
+                values: [{
+                        name: 'Classic',
+                        value: 'classic',
+                        selected: true
+                    },
+                    {
+                        name: 'Pirates and Ninjas',
+                        value: 'piratesAndNinjas'
+                    },
+                    {
+                        name: 'Cowboys and Aliens',
+                        value: 'cowboysAndAliens'
+                    }
+                ]
+            });
+        console.log($("#themeDropdown"));
     </script>
 
 </body>

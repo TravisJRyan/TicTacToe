@@ -7,14 +7,26 @@
     [0, 1, 2
      3, 4, 5
      6, 7, 8]
-
 */
 
-// Global map of game state (X, O, empty) to the file location of the corresponding image
+// Global map of game states (X, O, empty) to the file locations of the corresponding image
+// Each theme is its own JSON child object which maps X, O, and empty to relevant images
 var imageMap = {
-    "X": "img/ninja.svg",
-    "O": "img/pirate.svg",
-    "empty": "img/white.png"
+    "classic": {
+        "X": "img/X.png",
+        "O": "img/O.png",
+        "empty": "img/white.png"
+    },
+    "cowboysAndAliens": {
+        "X": "img/cowboy.png",
+        "O": "img/alien.png",
+        "empty": "img/white.png"
+    },
+    "piratesAndNinjas": {
+        "X": "img/ninja.svg",
+        "O": "img/pirate.svg",
+        "empty": "img/white.png"
+    }
 }
 
 // Global statistics vars (every win/loss/tie on every difficulty)
@@ -69,6 +81,7 @@ function pageLoaded() { // Hide inactive tabs and start a game of Tic Tac Toe
 // Function to start (or restart) a game by emptying all tiles and updating the screen
 function startGame() {
     gameOver = false;
+    setDifficulty();
     $("#headerMessage").html("<h1>Tic Tac Toe</h1>");
     for (tile in gameState) {
         gameState[tile] = "empty";
@@ -100,7 +113,12 @@ function processPlayerMove(chosenTile) {
 // Processes the next move for the computer, places a O, and updates board state
 function processComputerMove() {
     if (!gameOver) {
-        var optimalTile = findMove();
+        if(gameDifficulty=="hard")
+            var optimalTile = findHardMove();
+        else if(gameDifficulty=="medium")
+            var optimalTile = findMediumMove();
+        else if(gameDifficulty=="easy")
+            var optimalTile = findEasyMove();
         gameState[optimalTile] = "O";
         updateEntireScreen();
         if (checkForWin("O"))
@@ -116,7 +134,7 @@ function processComputerMove() {
 function updateEntireScreen() {
     for (var i = 0; i < 9; i++) {
         if (imageMap[gameState[i]] != $('#image' + i).attr('src'));
-        $("#image" + i).attr("src", imageMap[gameState[i]]);
+        $("#image" + i).attr("src", imageMap["cowboysAndAliens"][gameState[i]]);
     }
 }
 
@@ -154,7 +172,7 @@ function playerWins() {
     }
 }
 
-// Alert when the computer wins
+// Alert when the computer wins by updating the header message
 function computerWins() {
     $("#headerMessage").html("<h1>Computer wins!</h1>");
     gameOver = true;
@@ -180,10 +198,10 @@ function gameTied() {
     }
 }
 
-// Finds the optimal move for the computer using the given board state
+// Finds the optimal move for the computer using the given board state on hard difficulty
 // Always checks the turn number, and whether or not the computer went first
 // Strategy logic determined by this source: http://www.chessandpoker.com/tic_tac_toe_strategy.html
-function findMove() {
+function findHardMove() {
     var winningMove = getWinningOrBlockingMove("O"); // Win game if possible
     if (winningMove != -1)
         return winningMove;
@@ -226,11 +244,35 @@ function findMove() {
                         return 1; // threaten a win (because we have the center square). (Player must block and tie game.)
                     }
             }
-        default: // Default case: Game can't be lost/won at this point, so just pick the first available tile.
+        default: // Default case: Game can't be lost at this point, so just pick the first available tile.
             for (var i = 0; i < gameState.length; i++) {
                 if (gameState[i] == "empty")
                     return i;
             }
+    }
+}
+
+// Finds a move for the computer on medium difficulty
+// Always wins the game or blocks if possible. Otherwise, just iterates and picks first available tile
+function findMediumMove(){
+    var winningMove = getWinningOrBlockingMove("O"); // Win game if possible
+    if (winningMove != -1)
+        return winningMove;
+    var blockingMove = getWinningOrBlockingMove("X"); // If win isn't possible, block opponent win if necessary
+    if (blockingMove != -1)
+        return blockingMove;
+    for (var i = 0; i < gameState.length; i++) {
+        if (gameState[i] == "empty")
+            return i;
+    }
+}
+
+// Finds a move for the computer on easy difficulty
+// Always just takes the first tile available
+function findEasyMove(){
+    for (var i = 0; i < gameState.length; i++) {
+        if (gameState[i] == "empty")
+            return i;
     }
 }
 
@@ -254,6 +296,11 @@ function getWinningOrBlockingMove(computerOrPlayer) {
         }
     }
     return -1; // Return -1 if no win/block found
+}
+
+function setDifficulty(){
+    console.log($("difficultyDropdown").val());
+    gameDifficulty = "hard";
 }
 
 /* Tab Navigation Functions */
