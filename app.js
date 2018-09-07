@@ -69,7 +69,6 @@ var gameState = ["empty", "empty", "empty",
                 "empty", "empty", "empty"];
 
 function pageLoaded() { // Hide inactive tabs and start a game of Tic Tac Toe
-    //$("#gameBoard").hide();
     $("#about").hide();
     $("#settings").hide();
     $("#statistics").hide();
