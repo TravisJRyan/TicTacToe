@@ -47,10 +47,14 @@
         </div>
         <div class="ui grid">
             <div class="ui seven column grid container">
+                <!-- Rows and columns are used to build the 3x3 board -->
                 <div class="row">
+                    <!-- Columns keep the game board in the center of the screen -->
                     <div class="column"></div>
                     <div class="column"></div>
                     <div class=" column">
+                        <!-- UI Fluid Images are used for each tile. These fit images to their dimensions.
+                        Onclick: Each of these segments calls a function to process the game move.-->
                         <div id="segment" class="ui segment" onclick="processPlayerMove(0)">
                             <img id="image0" src="./img/white.png" class="ui fluid image">
                         </div>
@@ -116,6 +120,7 @@
 
             <!-- Menu -->
             <div class="ui container center aligned">
+                <!-- Checkbox is checked for whether or not the computer goes first -->
                 <div class="ui toggle checkbox">
                     <input id="turnCheckbox" type="checkbox" name="example">
                     <label style="color: rgb(196, 176, 112); font-size:20px">Computer Moves First</label>
