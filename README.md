@@ -2,6 +2,7 @@
 A simple in-browser Tic Tac Toe game. The primary guideline was that the computer never loses the game. In this implementation, this holds true when playing under the hardest setting. This project was built for WKU's CS396: Intermediate Software Project. All implementation was done by myself, Travis Ryan.
 
 The game should be live through Github Pages here: https://travisjryan.github.io/TicTacToe/
+
 Note: Internet Explorer will not work due to a JQuery issue.
 
 # Resources
